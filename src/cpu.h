@@ -4,6 +4,8 @@ class Cpu{
 
 	uint16_t P0,P1,P2,P3;
 	uint8_t ACC,EXT,ST;
+	enum State{ RUN,HALT,STEP };
+	State emustate = RUN;
 
 	/* Status Register Flags
 	 *7: Carry/Link
@@ -21,11 +23,33 @@ class Cpu{
 		P0 = 0x0000;
 		P0 = P0 + 1;
 		ST = 0x00;
-
 	}
 
-	int Tick(int memory[]){
-		switch(memory[P0]){
+	int EmuState(){
+		if( emustate == RUN ){return 0;}
+		else if( emustate == HALT ){return 1;}
+		else{return 2;}
+	}
+
+	State SetEmuState(State arg){
+		emustate = arg;
+	}
+
+	int Halt(){
+		emustate = HALT;
+	}
+
+	int Run(){
+		emustate = RUN;
+	}
+
+	int CountOut(){
+		return P0;
+	}
+
+	int Tick(int memory){
+		P0++;
+		switch(memory){
 	case 0x00: //HALT, this one should be interesting (Pulse H-flag, as the programming and assembler manual says)
 	break;
 	case 0x01: //XAE - Exchange AC and Extension
@@ -118,6 +142,9 @@ class Cpu{
 	break;
 	case 0xFC: //CAI - Complement and Add Immediate
 	break;
+	default:
+	std::cout << "Illegal Instruction at 0x" << std::hex << CountOut() << ": 0x" << std::hex << memory << std::endl;
+	Halt();	
 		}
 	}
 };
