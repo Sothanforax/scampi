@@ -4,11 +4,10 @@
 
 int main(){
 	uint8_t memory[0xFFF];
-	char unhalt;
 	Cpu cpu;
 	cpu.Init();
 	while(cpu.EmuState() == 0){
-		cpu.Tick(memory[cpu.CountOut()]);
-		std::cout << "tick " << cpu.CountOut() << std::endl;
+		cpu.Tick(memory[cpu.PCounterOut()]);
+		std::cout << "Tick " << cpu.PCounterOut() << std::endl;
 }
 }

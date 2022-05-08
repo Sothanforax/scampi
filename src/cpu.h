@@ -23,6 +23,7 @@ class Cpu{
 		P0 = 0x0000;
 		P0 = P0 + 1;
 		ST = 0x00;
+		return 0;
 	}
 
 	int EmuState(){
@@ -31,19 +32,11 @@ class Cpu{
 		else{return 2;}
 	}
 
-	State SetEmuState(State arg){
+	void SetEmuState(State arg){
 		emustate = arg;
 	}
 
-	int Halt(){
-		emustate = HALT;
-	}
-
-	int Run(){
-		emustate = RUN;
-	}
-
-	int CountOut(){
+	int PCounterOut(){
 		return P0;
 	}
 
@@ -110,7 +103,7 @@ class Cpu{
 	break;
 	case 0xA8: //ILD - Increment and Load
 	break;
-	case 0xB8: //DLD - Decrement and Load
+	case 0xB8: //DLD  - Decrement and Load
 	break;
 	case 0xC0: //LD - Load
 	break;
@@ -143,8 +136,9 @@ class Cpu{
 	case 0xFC: //CAI - Complement and Add Immediate
 	break;
 	default:
-	std::cout << "Illegal Instruction at 0x" << std::hex << CountOut() << ": 0x" << std::hex << memory << std::endl;
-	Halt();	
+	std::cout << "Illegal Instruction at 0x" << std::hex << PCounterOut() << ": 0x" << std::hex << memory << std::endl;
+	SetEmuState(HALT);	
 		}
+		return 0;
 	}
 };
