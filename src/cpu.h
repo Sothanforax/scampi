@@ -1,7 +1,7 @@
 #include <iostream>
 
 class Cpu{
-
+	public:
 	uint16_t P0,P1,P2,P3;
 	uint8_t ACC,EXT,ST;
 	/* Status Register Flags/Bits
@@ -25,25 +25,25 @@ class Cpu{
 	enum State{ RUN = 0, HALT = 1, STEP = 2 };
 	State emustate = RUN;
 
-	public:
 	void Init(){
 		P0 = 0x0000; //Clear P0/PC
-		P0 = P0 + 1; //Account for the SC/MP's weird behavior of incrementing the Program Counter before fetching an instruction.
+		P1 = 0x0000;
+		P2 = 0x0000;
+		P3 = 0x0000;
+		ACC = 0x00; //Clear the Accumulator
+		EXT = 0x00; //Clear the Extension Register
 		ST = 0x00; //Clear the Status Register
+		P0 = P0 + 1; //Account for the SC/MP's weird behavior of incrementing the Program Counter before fetching an instruction.
 	}
 
 	int EmuState(){
-		if( emustate == RUN ){return 0;}
-		else if( emustate == HALT ){return 1;}
+		if(emustate == RUN){return 0;}
+		else if(emustate == HALT){return 1;}
 		else{return 2;}
 	}
 
 	void SetEmuState(int arg){
 		emustate = static_cast<State>(arg);
-	}
-
-	int PCounterOut(){
-		return P0;
 	}
 
 	void Tick(int memory){
@@ -188,7 +188,7 @@ class Cpu{
 	break;
 	default:
 	if(EmuAccuracy == 0){
-		std::cout << "Illegal Instruction at 0x" << std::hex << PCounterOut() << ": 0x" << std::hex << memory << std::endl;
+		std::cout << "Illegal Instruction at 0x" << std::hex << P0 << ": 0x" << std::hex << memory << std::endl;
 		SetEmuState(HALT);
 	}
 	else if(EmuAccuracy == 1){
