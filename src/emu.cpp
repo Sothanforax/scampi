@@ -4,6 +4,18 @@
 
 void dump_mem();
 uint8_t memory[0xFFFF];
+/*Paging, and memory layout
+*The address space is 16 bit, but divided into 16 pages of 4096 bytes each.
+*Memory address layout:
+*15-12 Page #
+*11-0 Page Displacement.
+*
+*0 000
+*P DDD
+* aka: page 0 goes from 0000 to 0FFF
+* page 1 goes from 1000 to 1FFF
+* etc etc.
+*/
 
 int main(){
 	Cpu cpu;

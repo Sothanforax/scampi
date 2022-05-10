@@ -23,7 +23,7 @@ class Cpu{
 	*/
 
 	enum State{ RUN = 0, HALT = 1, STEP = 2 };
-	State emustate = RUN;
+	State emustate = STEP;
 
 	void Init(){
 		P0 = 0x0000; //Clear P0/PC
