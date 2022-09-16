@@ -68,7 +68,7 @@ class Cpu{
 	
 	break;
 	case 0x06: //CSA - Copy Status to AC
-	
+	ACC = ST;
 	break;
 	case 0x07: //CAS - Copy AC to Status
 	
@@ -120,7 +120,7 @@ class Cpu{
 	case 0x78: //CAE - Complement and Add Extension
 	
 	break;
-	case 0x8F: //DLY - Delay, like NOP but more specific?
+	case 0x8F: //DLY - Delay processor for specific amount of time in microcycles (13-131593, refer to technical description.)
 	
 	break;
 	case 0x90: //JMP - Jump

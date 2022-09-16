@@ -1,6 +1,7 @@
 #include <iostream>
+#include <ostream>
+#include <string>
 #include "cpu.h"
-#include "interface.h"
 
 void dump_mem();
 uint8_t memory[0xFFFF];
@@ -28,16 +29,48 @@ int main(){
 			std::cout << "Addr: 0x" << std::hex << sizeof(memory) / sizeof(uint8_t) << std::endl;
 		}
 }
-	if(cpu.EmuState() == 2){std::cout << "SS: Enter to increment P0" << std::endl;}
 	while(cpu.EmuState() == 2){
-		std::cin.get();
+		std::string dbgc;
+		std::cout << "> ";
+		std::getline(std::cin,dbgc);
+		if(dbgc == "s"){
 		cpu.Tick(memory[cpu.P0]);
+		std::cout << "SINGLE STEP" << std::endl;
 		std::cout << "P0: 0x" << std::hex << cpu.P0 << " MEM: 0x" << static_cast<int>(memory[cpu.P0])  
 			<< "\nP1: 0x" << std::hex << cpu.P1 
 			<< "\nP2: 0x" << std::hex << cpu.P2 
 			<< "\nP3: 0x" << std::hex << cpu.P3 
 			<< "\nACC: 0x" << std::hex << static_cast<int>(cpu.ACC)
 			<< "\nE: 0x" << std::hex << static_cast<int>(cpu.EXT) << std::endl;
+		}
+		else if(dbgc == "h"||dbgc == "help"){
+			std::cout << "Commands" << std::endl << "h/help: view help\nq/quit: quit debugger and emulator\nr: dump register contents\ne: examine memory at specified address\nx: resume eXecution of emulator, exiting the debugger" << std::endl;
+		}
+		else if(dbgc == "q"||dbgc == "quit"){
+			return 0;
+		}
+		else if(dbgc == "r"){
+			std::cout << "P0: 0x" << std::hex << cpu.P0  
+			<< "\nP1: 0x" << std::hex << cpu.P1 
+			<< "\nP2: 0x" << std::hex << cpu.P2 
+			<< "\nP3: 0x" << std::hex << cpu.P3 
+			<< "\nACC: 0x" << std::hex << static_cast<int>(cpu.ACC)
+			<< "\nE: 0x" << std::hex << static_cast<int>(cpu.EXT) << std::endl;
+		}
+		else if(dbgc == "e"){
+			int maddr;
+			std::cout << "Addr: ";
+			std::cin >> maddr;
+			std::cout << "Memory at ADDR: " << std::hex <<memory[maddr];
+			//std::cout << "\nMemory at Program Counter: " << std::hex << memory[cpu.P0];
+		}
+		else if(dbgc == "x"){
+			cpu.SetEmuState(0);
+		}
+		else{
+			std::cout << "Invalid debugger command: " << dbgc << std::endl;
+			}
+
 		if(cpu.P0 == sizeof(memory)/sizeof(uint8_t)){
 			cpu.SetEmuState(1);
 			std::cout << std::endl << "Out of Memory, Execution Halted." << std::endl;
